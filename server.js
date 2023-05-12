@@ -19,17 +19,17 @@ const pool = new Pool({
   port: process.env.DB_PORT,
   ssl: {
     rejectUnauthorized: true,
-  }
+  },
 });
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/', (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.status(200).json('Hello world')
-})
+// app.use('/', (req, res) => {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.status(200).json('Hello world')
+// })
 
 app.use("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -60,7 +60,10 @@ app.use("/login", async (req, res) => {
         process.env["jwtPrivateKey"] // env is objec [xxx] you are accessing the key of the object
       );
       console.log("===>", token, passwordMatch);
-      res.header("Access-Control-Allow-Origin", "*");
+      res.header(
+        "Access-Control-Allow-Origin",
+        "https://statutory-spelling-practice-app.netlify.app/"
+      );
       res.status(200).json({
         // JWT
         token,
@@ -80,6 +83,10 @@ app.use("/login", async (req, res) => {
 app.get("/words", async (req, res) => {
   try {
     const allWords = await pool.query("select * from year3and4");
+    res.header(
+      "Access-Control-Allow-Origin",
+      "https://statutory-spelling-practice-app.netlify.app/"
+    );
     res.status(200).json(allWords.rows);
   } catch (err) {
     console.error(err);
