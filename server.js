@@ -19,7 +19,7 @@ const pool = new Pool({
   port: process.env.DB_PORT,
   ssl: {
     rejectUnauthorized: true,
-  }
+  },
 });
 
 app.use(cors());
@@ -47,9 +47,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //   }
 // });
 
-app.get('/',(req, res)=> {
-  res.status(200).json('Hello world')
-})
+app.get("/", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.status(200).json("Hello world");
+});
 
 app.use("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -80,6 +81,7 @@ app.use("/login", async (req, res) => {
         process.env["jwtPrivateKey"] // env is objec [xxx] you are accessing the key of the object
       );
       console.log("===>", token, passwordMatch);
+      res.header("Access-Control-Allow-Origin", "*");
       res.status(200).json({
         // JWT
         token,
