@@ -26,27 +26,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// app.use("/login", async (req, res) => {
-//     const { username, password } = req.body;
-
-//     const salt = await bcrypt.genSalt(10);
-
-//     await bcrypt.hash(password, salt);
-
-//     console.log("===>", username, password);
-
-//   try {
-//     const user = await pool.query(
-//       `select firstname,lastname from accounts where username = $1 and password= $2`,
-//       [username, password]
-//     );
-//     res.status(200).json(user.rows);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send(err);
-//   }
-// });
-
 app.use('/', (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.status(200).json('Hello world')
