@@ -19,7 +19,7 @@ const pool = new Pool({
   port: process.env.DB_PORT,
   ssl: {
     rejectUnauthorized: true,
-  },
+  }
 });
 
 app.use(cors());
@@ -47,10 +47,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //   }
 // });
 
-app.get("/", (req, res) => {
+app.use('/', (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.status(200).json("Hello world");
-});
+  res.status(200).json('Hello world')
+})
 
 app.use("/login", async (req, res) => {
   const { username, password } = req.body;
