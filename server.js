@@ -54,8 +54,7 @@ app.use("/login", async (req, res) => {
         },
         process.env["jwtPrivateKey"] // env is objec [xxx] you are accessing the key of the object
       );
-      console.log("===>", token, passwordMatch);
-
+     
       res.status(200).json({
         // JWT
         token,
