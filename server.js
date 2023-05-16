@@ -26,6 +26,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Sign In
 app.use("/login", async (req, res) => {
   const { username, password } = req.body;
 
@@ -54,7 +55,7 @@ app.use("/login", async (req, res) => {
         },
         process.env["jwtPrivateKey"] // env is objec [xxx] you are accessing the key of the object
       );
-     
+
       res.status(200).json({
         // JWT
         token,
@@ -64,6 +65,30 @@ app.use("/login", async (req, res) => {
           lastname: user.rows[0].lastname,
         },
       });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
+  }
+});
+
+//Sign Up
+app.use("/signup", async (req, res) => {
+  const { firstname, lastname, username, password, email } = req.body;
+
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  try {
+    const user = await pool.query(
+      `insert into accounts (firstname, lastname,username,password,email) values ($1,$2,$3,$4,$5)`,
+      [firstname, lastname, username, hashedPassword, email]
+    );
+
+    if (user.rowCount > 0) {
+      res.status(200).json({ message: "You sign up successfully" });
+    } else {
+      res.status(500).json({ message: "Try again registration failed" });
     }
   } catch (err) {
     console.error(err);
@@ -82,4 +107,4 @@ app.get("/words", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log("API is running "));
+app.listen(PORT, () => console.log("Server is running "));
