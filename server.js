@@ -114,9 +114,10 @@ app.post("/session-Record", async (req, res) => {
     wrongSpeltWords,
     countedCorrectWord,
     countedWrongWord,
-    sessionaccuracy
+    sessionAccuracy,
   } = req.body;
 
+console.log(req.body);
   try {
     // write the issert query
     const sessionRecord = await pool.query(
@@ -127,7 +128,7 @@ app.post("/session-Record", async (req, res) => {
         wrongSpeltWords,
         countedCorrectWord,
         countedWrongWord,
-        sessionaccuracy,
+        sessionAccuracy
       ]
     );
 
