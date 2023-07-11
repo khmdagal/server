@@ -34,19 +34,21 @@ CREATE TABLE account_roles (
 
 CREATE TABLE sessions (
 session_id serial PRIMARY KEY,
-session_key INT NOT NULL,
 user_id INT REFERENCES accounts (user_id),
+correntWordsList TEXT,
+wrongWordsList TEXT,
 correnct int,
 incorrect int	
 );
 
-CREATE TABLE year3and4(
+
+CREATE TABLE year3And4Words(
 word_id serial PRIMARY KEY,
 word varchar(50)
 );
 
 
-INSERT INTO year3and4(word)
+INSERT INTO year3And4Words(word)
 values
   ('accident'),
   ('accidentally'),
