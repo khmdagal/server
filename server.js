@@ -17,9 +17,9 @@ const pool = new Pool({
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
-  ssl: {
-    rejectUnauthorized: true,
-  },
+  // ssl: {
+  //   rejectUnauthorized: true,
+  // },
 });
 
 app.use(cors());
@@ -29,7 +29,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Sign In
 app.use("/login", async (req, res) => {
   const { username, password } = req.body;
-
+  console.log("===>>> Login details", username, password);
   try {
     const user = await pool.query(
       `SELECT user_id, firstname, lastname, password FROM accounts WHERE username = $1`,
@@ -98,7 +98,7 @@ app.use("/signup", async (req, res) => {
 
 app.get("/words", async (req, res) => {
   try {
-    const allWords = await pool.query("select * from year3and4");
+    const allWords = await pool.query("select * from year3and4words");
 
     res.status(200).json(allWords.rows);
   } catch (err) {
@@ -107,4 +107,36 @@ app.get("/words", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log("Server is running "));
+app.post("/session-Record", async (req, res) => {
+  const {
+    userId,
+    correctSpeltWords,
+    wrongSpeltWords,
+    countedCorrectWord,
+    countedWrongWord,
+    sessionaccuracy
+  } = req.body;
+
+  try {
+    // write the issert query
+    const sessionRecord = await pool.query(
+      `insert into sessions (user_id,correntWordsList,wrongWordsList,correnct,incorrect,sessionaccuracy) values ($1,$2,$3,$4,$5,$6)`,
+      [
+        userId,
+        correctSpeltWords,
+        wrongSpeltWords,
+        countedCorrectWord,
+        countedWrongWord,
+        sessionaccuracy,
+      ]
+    );
+
+    sessionRecord.rowCount > 0
+      ? res.status(200).json({ message: "Session recorded successfully" })
+      : res.status(500).json({ message: "Session Not recorded" });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.listen(PORT, () => console.log(`Server is running on ${PORT}`));

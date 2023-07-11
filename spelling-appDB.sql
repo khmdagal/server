@@ -38,7 +38,8 @@ user_id INT REFERENCES accounts (user_id),
 correntWordsList TEXT,
 wrongWordsList TEXT,
 correnct int,
-incorrect int	
+incorrect int,
+sessionaccuracy INT
 );
 
 
