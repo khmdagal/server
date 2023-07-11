@@ -3,7 +3,7 @@ accounts,
 roles,
 account_roles,
 sessions,
-year3and4
+year3And4Words
 cascade;
 
 CREATE TABLE accounts (
@@ -39,7 +39,7 @@ correntWordsList TEXT,
 wrongWordsList TEXT,
 correnct int,
 incorrect int,
-sessionaccuracy INT
+sessionaccuracy INT NOT NULL
 );
 
 
