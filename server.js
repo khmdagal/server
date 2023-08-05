@@ -112,23 +112,23 @@ app.post("/session-Record", async (req, res) => {
     userId,
     correctSpeltWords,
     wrongSpeltWords,
-    countedCorrectWord,
-    countedWrongWord,
-    sessionAccuracy,
+    countedCorrectWords,
+    countedWrongWords,
+    session_accuracy_percentage,
   } = req.body;
 
-console.log(req.body);
+  console.log(req.body);
   try {
-    // write the issert query
+    // write the insert query
     const sessionRecord = await pool.query(
-      `insert into sessions (user_id,correntWordsList,wrongWordsList,correnct,incorrect,sessionaccuracy) values ($1,$2,$3,$4,$5,$6)`,
+      `insert into sessions (user_id,correctWordsList,wrongWordsList,number_of_correct_words,number_of_incorrect_words,session_accuracy_percentage) values ($1,$2,$3,$4,$5,$6)`,
       [
         userId,
         correctSpeltWords,
         wrongSpeltWords,
-        countedCorrectWord,
-        countedWrongWord,
-        sessionAccuracy
+        countedCorrectWords,
+        countedWrongWords,
+        session_accuracy_percentage,
       ]
     );
 
