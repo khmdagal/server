@@ -140,4 +140,20 @@ app.post("/session-Record", async (req, res) => {
   }
 });
 
+app.get("/overall_Record/:userId", async (req, res) => {
+  
+  const userId = +req.params.userId;
+  const userOverallProgressRecord = await pool.query(
+    `select session_id, session_accuracy_percentage from sessions where user_id = $1`,[userId]
+  );
+
+  userOverallProgressRecord.rowCount > 0
+    ? res.status(200).send(userOverallProgressRecord.rows)
+    : res.status(500).json({ message: "record not found" });
+  try {
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error);
+  }
+});
 app.listen(PORT, () => console.log(`Server is running on ${PORT}`));
