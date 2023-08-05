@@ -35,13 +35,13 @@ CREATE TABLE account_roles (
 CREATE TABLE sessions (
 session_id serial PRIMARY KEY,
 user_id INT REFERENCES accounts (user_id),
-correntWordsList TEXT,
+correctWordsList TEXT,
 wrongWordsList TEXT,
-correnct int,
-incorrect int,
-sessionaccuracy INT NOT NULL
+number_of_correct_words INT,
+number_of_incorrect_words INT,
+session_accuracy_percentage NUMERIC(5,2),
+percentage_sign VARCHAR(1) DEFAULT '%'
 );
-
 
 CREATE TABLE year3And4Words(
 word_id serial PRIMARY KEY,
