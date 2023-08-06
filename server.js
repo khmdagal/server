@@ -140,11 +140,23 @@ app.post("/session-Record", async (req, res) => {
   }
 });
 
-app.get("/overall_Record/:userId", async (req, res) => {
-  
+app.get("/sessions_data", async (req, res) => {
+  try {
+    const getData = await pool.query(`select * from sessions`);
+    const sessionsData = getData.rows;
+    res.status(200).json(sessionsData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error });
+  }
+});
+
+app.get("/overall_progress_data/:userId", async (req, res) => {
   const userId = +req.params.userId;
+  console.log(userId);
   const userOverallProgressRecord = await pool.query(
-    `select session_id, session_accuracy_percentage from sessions where user_id = $1`,[userId]
+    `select session_id, session_accuracy_percentage from sessions where user_id = $1`,
+    [userId]
   );
 
   userOverallProgressRecord.rowCount > 0
