@@ -1,5 +1,5 @@
 require("dotenv").config();
-import { validatePassword } from "./helpers/Validations";
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -29,8 +29,26 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Sign In
 app.use("/login", async (req, res) => {
   const { username, password } = req.body;
+
+  // validate password
+  const validatePassword = (password) => {
+    if (password.length < 6) {
+      return "Password must be at least 7 character long";
+    } else if (!/[a-z]/.test(password)) {
+      return "Password must contain at least one lowercase letter";
+    } else if (!/[A-Z]/.test(password)) {
+      return "Password must contain al least one uppercase letter";
+    } else if (!/\d/.test(password)) {
+      return "Password must contain at least one number";
+    } else if (!/[!@#$%^&*]/.test(password)) {
+      return "Password must contain at least one special character";
+    } else {
+      // if password is valid return nothing
+      return password;
+    }
+  };
   const validatedPassword = validatePassword(password);
- 
+
   try {
     const user = await pool.query(
       `SELECT user_id, firstname, lastname, password FROM accounts WHERE username = $1`,
@@ -155,6 +173,7 @@ app.get("/sessions_data", async (req, res) => {
 app.get("/overall_progress_data/:userId", async (req, res) => {
   const userId = +req.params.userId;
   console.log(userId);
+  
   const userOverallProgressRecord = await pool.query(
     `select session_id, session_accuracy_percentage from sessions where user_id = $1`,
     [userId]
