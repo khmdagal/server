@@ -95,8 +95,26 @@ app.use("/login", async (req, res) => {
 app.use("/signup", async (req, res) => {
   const { firstname, lastname, username, password, email } = req.body;
 
+  const validatePassword = (password) => {
+    if (password.length < 6) {
+      return "Password must be at least 7 character long";
+    } else if (!/[a-z]/.test(password)) {
+      return "Password must contain at least one lowercase letter";
+    } else if (!/[A-Z]/.test(password)) {
+      return "Password must contain al least one uppercase letter";
+    } else if (!/\d/.test(password)) {
+      return "Password must contain at least one number";
+    } else if (!/[!@#$%^&*]/.test(password)) {
+      return "Password must contain at least one special character";
+    } else {
+      // if password is valid return nothing
+      return password;
+    }
+  };
+  const validatedPassword = validatePassword(password);
+
   const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const hashedPassword = await bcrypt.hash(validatedPassword, salt);
 
   try {
     const user = await pool.query(
@@ -173,7 +191,7 @@ app.get("/sessions_data", async (req, res) => {
 app.get("/overall_progress_data/:userId", async (req, res) => {
   const userId = +req.params.userId;
   console.log(userId);
-  
+
   const userOverallProgressRecord = await pool.query(
     `select session_id, session_accuracy_percentage from sessions where user_id = $1`,
     [userId]
