@@ -1,5 +1,5 @@
 require("dotenv").config();
-
+import { validatePassword } from "./helpers/Validations";
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -29,7 +29,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Sign In
 app.use("/login", async (req, res) => {
   const { username, password } = req.body;
-  console.log("===>>> Login details", username, password);
+  const validatedPassword = validatePassword(password);
+ 
   try {
     const user = await pool.query(
       `SELECT user_id, firstname, lastname, password FROM accounts WHERE username = $1`,
@@ -37,14 +38,14 @@ app.use("/login", async (req, res) => {
     );
 
     if (user.rows.length === 0) {
-      res.status(401).json({ error: "Invalid username or password" });
+      res.status(401).json({ error: "Invalid username" });
       return;
     }
     const storedHash = user.rows[0].password;
-    const passwordMatch = await bcrypt.compare(password, storedHash);
+    const passwordMatch = await bcrypt.compare(validatedPassword, storedHash);
 
     if (!passwordMatch) {
-      res.status(401).json({ error: "Invalid username or password" });
+      res.status(401).json({ error: "Invalid password" });
       return;
     } else {
       const token = jwt.sign(
