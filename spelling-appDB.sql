@@ -3,7 +3,7 @@ accounts,
 roles,
 account_roles,
 sessions,
-year3And4Words
+spelling_table
 cascade;
 
 CREATE TABLE accounts (
