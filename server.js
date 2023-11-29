@@ -134,10 +134,11 @@ app.use("/signup", async (req, res) => {
   }
 });
 
-app.get("/words", async (req, res) => {
+app.get("/words/:selectedYears", async (req, res) => {
+  const selectedYears = req.params.selectedYears;
   try {
     const allWords = await pool.query(
-      "SELECT year3and4words FROM spelling_table WHERE word_id  BETWEEN 1 AND 109"
+      `SELECT word_id, ${selectedYears} FROM spelling_table`
     );
 
     res.status(200).json(allWords.rows);
